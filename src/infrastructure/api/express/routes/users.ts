@@ -1,6 +1,8 @@
 // src/infrastructure/api/express/routes/users.ts
 
-import * as express, { NextFunction, Request, Response } from "express";
+import * as express from "express";
+import { NextFunction, Request, Response } from "express";
+
 import { services } from "../../../../config";
 import { UserController } from "../../../../controllers";
 import { UserProfile } from "../../../../use-cases/user";
@@ -13,16 +15,44 @@ const controller = new UserController(
 
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = parseInt(req.params?.id);
-    const { page, perPage } = req.query as unknown as {
-      page: number;
-      perPage: number;
-    };
-    const result = await controller.profile({ params: { id, page, perPage } });
+    let result = null;
+    if (req.params.id) {
+      const id = parseInt(req.params?.id);
+      const { page, perPage } = req.query as unknown as {
+        page: number;
+        perPage: number;
+      };
+      const result = await controller.profile({
+        params: { id, page, perPage },
+      });
+    }
     res.send(result);
   } catch (err) {
     next(err);
   }
 });
+// router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     let result = null;
+//     if (req.params.id) {
+//       const id = parseInt(req.params.id, 10);
+//       const { page, perPage } = req.query as {
+//         page?: string;
+//         perPage?: string;
+//       };
 
+//       result = await controller.profile({
+//         params: {
+//           id,
+//           page: page ? parseInt(page, 10) : 1,
+//           perPage: perPage ? parseInt(perPage, 10) : 10,
+//         },
+//       });
+//     }
+
+//     res.send(result);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 export default router;

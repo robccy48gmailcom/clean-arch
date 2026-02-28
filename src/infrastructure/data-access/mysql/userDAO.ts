@@ -9,7 +9,7 @@ export default class MySQLUserDAO implements IUserDAO {
   async listUsers(
     filters: Partial<User>,
     page: number,
-    perPage: number
+    perPage: number,
   ): Promise<IPaginated<User>> {
     let query =
       "SELECT `id`, `firstName`, `lastName`, `email`, `role` FROM `users`";
@@ -20,7 +20,7 @@ export default class MySQLUserDAO implements IUserDAO {
 
     const [rows]: [RowDataPacket[], unknown] = await client.query(
       `${query} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`,
-      Object.values(filters)
+      Object.values(filters),
     );
 
     return {
@@ -38,7 +38,7 @@ export default class MySQLUserDAO implements IUserDAO {
     }
     const [rows]: [RowDataPacket[], unknown] = await client.query(
       query,
-      Object.values(filters)
+      Object.values(filters),
     );
     if (rows.length < 1) {
       return null;
@@ -50,7 +50,7 @@ export default class MySQLUserDAO implements IUserDAO {
   async findForAuth(email: string): Promise<AuthUser | null> {
     const [rows]: [RowDataPacket[], unknown] = await client.query(
       `SELECT * FROM \`users\` WHERE \`email\` = ? LIMIT 1`,
-      email
+      email,
     );
     if (rows.length < 1) {
       return null;
@@ -68,12 +68,13 @@ export default class MySQLUserDAO implements IUserDAO {
         .join(", ")})`;
       const [result] = await client.query(query, values);
 
-      const [[data]]: [RowDataPacket[], unknown] = await client.query(
+      const [rows]: [RowDataPacket[], unknown] = await client.query(
         `SELECT * FROM \`users\` WHERE \`id\` = ? LIMIT 1`,
-        (result as { insertId: number }).insertId
+        (result as { insertId: number }).insertId,
       );
 
-      if (!data.id) {
+      const data = rows[0];
+      if (!data || !data.id) {
         throw new Error("Unable to create user");
       }
       const user = new User(data as unknown as User);
@@ -101,7 +102,7 @@ export default class MySQLUserDAO implements IUserDAO {
 
     const [{ affectedRows }]: [ResultSetHeader, unknown] = await client.query(
       `UPDATE \`users\` SET ${updateString} WHERE \`id\` = ?`,
-      [...updateValues, id]
+      [...updateValues, id],
     );
 
     return affectedRows > 0;
@@ -110,7 +111,7 @@ export default class MySQLUserDAO implements IUserDAO {
   async delete(id: number): Promise<boolean> {
     const [result]: [ResultSetHeader, unknown] = await client.query(
       `DELETE FROM \`users\` WHERE \`id\` = ?`,
-      id
+      id,
     );
     return result.affectedRows > 0;
   }

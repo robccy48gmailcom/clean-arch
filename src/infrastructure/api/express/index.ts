@@ -1,10 +1,10 @@
 // src/infrastructure/api/express/index.ts
 
-import * as express from "express";
-import * as logger from "morgan";
-import * as cors from "cors";
-import * as methodOverride from "method-override";
-import * as routes from "./routes";
+import express from "express";
+import logger from "morgan";
+import cors from "cors";
+import methodOverride from "method-override";
+import routes from "./routes";
 import { IError } from "../../../interfaces";
 
 const app: express.Application = express();

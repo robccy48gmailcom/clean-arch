@@ -1,7 +1,12 @@
 // src/interfaces/validator.ts
 
+export interface ValidationError {
+  field: string;
+  message: string;
+}
+
 export interface IValidationResult<T> {
-  errors?: string[];
+  errors?: ValidationError[];
   data: T;
 }
 

@@ -57,7 +57,7 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = (req as unknown as { token: string }).token;
-      const id = parseInt(req.params.id);
+      const id = req.params.id ? parseInt(req.params.id) : NaN;
       const body = req.body;
       const success = await controller.usersUpdate({
         token,
@@ -76,7 +76,7 @@ router.delete(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = (req as unknown as { token: string }).token;
-      const id = parseInt(req.params.id);
+      const id = req.params.id ? parseInt(req.params.id) : NaN;
       const success = await controller.usersDelete({ token, params: { id } });
       res.send({ success });
     } catch (err) {
