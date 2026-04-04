@@ -1,16 +1,16 @@
 // src/infrastructure/api/express/routes/articles.ts
 
-import express, { NextFunction, Request, Response, Router } from "express";
-import { services } from "../../../../config";
-import { ArticleController } from "../../../../controllers";
-import { AuthorizeUser, FetchAuthorisedUser } from "../../../../use-cases/user";
+import express, { NextFunction, Request, Response, Router } from 'express';
+import { services } from '../../../../config';
+import { ArticleController } from '../../../../controllers';
+import { AuthorizeUser, FetchAuthorisedUser } from '../../../../use-cases/user';
 import {
   ArticleFeed,
   CreateArticle,
   DeleteArticle,
   UpdateArticle,
   ViewArticle,
-} from "../../../../use-cases/article";
+} from '../../../../use-cases/article';
 
 const articleDAO = new services.article.DAO();
 const userDAO = new services.user.DAO();
@@ -27,7 +27,7 @@ const controller = new ArticleController(
 
 const router: Router = express.Router();
 
-router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { page, perPage } = req.query as unknown as {
       page: number;
@@ -40,11 +40,11 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params as unknown as { id: string };
     const token =
-      [...(req.headers["authorization"]?.split(" ") || [])].pop() || "";
+      [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
     const result = await controller.view({ token, params: { id } });
     res.send(result);
   } catch (err) {
@@ -52,10 +52,10 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response, next: NextFunction) => {
+router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token =
-      [...(req.headers["authorization"]?.split(" ") || [])].pop() || "";
+      [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
     const { title, description, content, isPublished } = req.body;
     const result = await controller.create({
       token,
@@ -67,11 +67,11 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
+router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params as unknown as { id: string };
     const token =
-      [...(req.headers["authorization"]?.split(" ") || [])].pop() || "";
+      [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
     const { title, description, content, isPublished } = req.body;
     const result = await controller.update({
       token,
@@ -85,12 +85,12 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.delete(
-  "/:id",
+  '/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params as unknown as { id: string };
       const token =
-        [...(req.headers["authorization"]?.split(" ") || [])].pop() || "";
+        [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
       const success = await controller.delete({ token, params: { id } });
       res.send({ success });
     } catch (err) {

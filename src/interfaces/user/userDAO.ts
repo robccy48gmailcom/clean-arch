@@ -1,13 +1,13 @@
 // src/interfaces/user/userDAO.ts
 
-import { AuthUser, User } from "../../entities";
-import IPaginated from "../paginated";
+import { AuthUser, User } from '../../entities';
+import IPaginated from '../paginated';
 
 export default interface IUserDAO {
   listUsers(
     filters: Partial<User>,
     page: number,
-    perPage: number
+    perPage: number,
   ): Promise<IPaginated<User>>;
   findOneBy(filters: Partial<User>): Promise<User | null>;
   findForAuth(email: string): Promise<AuthUser | null>;

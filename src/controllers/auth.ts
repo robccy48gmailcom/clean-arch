@@ -1,8 +1,8 @@
 // src/controllers/auth.ts
 
-import { IRequest, IUseCase } from "../interfaces";
-import { Article, User } from "../entities";
-import { ILoginResponse } from "../interfaces/user";
+import { IRequest, IUseCase } from '../interfaces';
+import { Article, User } from '../entities';
+import { ILoginResponse } from '../interfaces/user';
 
 export default class AuthController {
   constructor(
@@ -10,9 +10,9 @@ export default class AuthController {
     protected loginUser: IUseCase<ILoginResponse>,
     protected authorizeUser: IUseCase<User>,
     protected userArticles: IUseCase<
-      Pick<Article, "id" | "title" | "description" | "isPublished">[]
+      Pick<Article, 'id' | 'title' | 'description' | 'isPublished'>[]
     >,
-    protected updateProfile: IUseCase<boolean>
+    protected updateProfile: IUseCase<boolean>,
   ) {}
 
   async register(request: IRequest): Promise<{ success: boolean }> {
@@ -37,7 +37,7 @@ export default class AuthController {
       user.id,
       false,
       page,
-      perPage
+      perPage,
     );
     Object.assign(user, { articles });
     return user;

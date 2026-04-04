@@ -1,14 +1,14 @@
 // src/infrastructure/api/express/routes/admin.ts
 
-import express, { NextFunction, Request, Response } from "express";
-import { services } from "../../../../config";
-import AdminController from "../../../../controllers/admin";
+import express, { NextFunction, Request, Response } from 'express';
+import { services } from '../../../../config';
+import AdminController from '../../../../controllers/admin';
 import {
   AuthorizeAdmin,
   DeleteUser,
   ListUsers,
   UpdateUser,
-} from "../../../../use-cases/user";
+} from '../../../../use-cases/user';
 
 const userDAO = new services.user.DAO();
 
@@ -27,13 +27,13 @@ const router = express.Router();
 
 router.use((req: Request, _res: Response, next: NextFunction) => {
   const token =
-    [...(req.headers["authorization"]?.split(" ") || [])].pop() || "";
+    [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
   Object.assign(req, { token });
   next();
 });
 
 router.get(
-  "/users",
+  '/users',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = (req as unknown as { token: string }).token;
@@ -53,7 +53,7 @@ router.get(
 );
 
 router.put(
-  "/users/:id",
+  '/users/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = (req as unknown as { token: string }).token;
@@ -72,7 +72,7 @@ router.put(
 );
 
 router.delete(
-  "/users/:id",
+  '/users/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = (req as unknown as { token: string }).token;

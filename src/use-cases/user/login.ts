@@ -1,23 +1,23 @@
 // src/use-cases/user/login.ts
 
-import { User } from "../../entities";
-import { UnauthorizedError, ValidationError } from "../../errors";
-import { IUseCase } from "../../interfaces";
-import { ILoginResponse, IUserDAO } from "../../interfaces/user";
+import { User } from '../../entities';
+import { UnauthorizedError, ValidationError } from '../../errors';
+import { IUseCase } from '../../interfaces';
+import { ILoginResponse, IUserDAO } from '../../interfaces/user';
 
 export default class LoginUser implements IUseCase<ILoginResponse> {
   constructor(
     protected userDAO: IUserDAO,
     protected comparePasswords: (
       input: string,
-      encrypted: string
+      encrypted: string,
     ) => Promise<boolean>,
-    protected issueToken: (payload: Partial<User>) => string
+    protected issueToken: (payload: Partial<User>) => string,
   ) {}
 
   async call(email: string, password: string): Promise<ILoginResponse> {
     if (!email || !password) {
-      throw new ValidationError("Email and Password are required");
+      throw new ValidationError('Email and Password are required');
     }
     const user = await this.userDAO.findForAuth(email);
     const passwordsMatch = user
@@ -31,7 +31,7 @@ export default class LoginUser implements IUseCase<ILoginResponse> {
         token: this.issueToken({ id, firstName, lastName, email }),
       };
     } else {
-      throw new UnauthorizedError("Invalid login or password");
+      throw new UnauthorizedError('Invalid login or password');
     }
   }
 }

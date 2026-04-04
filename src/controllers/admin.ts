@@ -1,14 +1,14 @@
 // src/controllers/admin.ts
 
-import { User } from "../entities";
-import { IPaginated, IRequest, IUseCase } from "../interfaces";
+import { User } from '../entities';
+import { IPaginated, IRequest, IUseCase } from '../interfaces';
 
 export default class AdminController {
   constructor(
     protected authorizeAdmin: IUseCase<User>,
     protected listUsers: IUseCase<IPaginated<User>>,
     protected updateUser: IUseCase<boolean>,
-    protected deleteUser: IUseCase<boolean>
+    protected deleteUser: IUseCase<boolean>,
   ) {}
 
   async users(request: IRequest): Promise<IPaginated<User>> {

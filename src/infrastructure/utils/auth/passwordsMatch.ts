@@ -1,6 +1,6 @@
 // src/infrastructure/utils/auth/passwordsMatch.ts
 
-import * as bcrypt from "bcrypt";
+import * as bcrypt from 'bcrypt';
 
 export default async (
   password: string,

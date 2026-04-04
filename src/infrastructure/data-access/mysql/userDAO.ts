@@ -1,9 +1,9 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { AuthUser, User } from "../../../entities";
-import { IUserDAO } from "../../../interfaces/user";
-import client from "./client";
-import { IPaginated } from "../../../interfaces";
-import { ValidationError } from "../../../errors";
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
+import { AuthUser, User } from '../../../entities';
+import { IUserDAO } from '../../../interfaces/user';
+import client from './client';
+import { IPaginated } from '../../../interfaces';
+import { ValidationError } from '../../../errors';
 
 export default class MySQLUserDAO implements IUserDAO {
   async listUsers(
@@ -12,10 +12,10 @@ export default class MySQLUserDAO implements IUserDAO {
     perPage: number,
   ): Promise<IPaginated<User>> {
     let query =
-      "SELECT `id`, `firstName`, `lastName`, `email`, `role` FROM `users`";
+      'SELECT `id`, `firstName`, `lastName`, `email`, `role` FROM `users`';
     const sqlFilters = Object.keys(filters).map((key) => `${key} = ?`);
     if (sqlFilters.length > 0) {
-      query = `${query} WHERE ${sqlFilters.join(" AND ")}`;
+      query = `${query} WHERE ${sqlFilters.join(' AND ')}`;
     }
 
     const [rows]: [RowDataPacket[], unknown] = await client.query(
@@ -31,10 +31,10 @@ export default class MySQLUserDAO implements IUserDAO {
 
   async findOneBy(filters: Partial<User>): Promise<User | null> {
     let query =
-      "SELECT `id`, `firstName`, `lastName`, `email`, `role` FROM `users`";
+      'SELECT `id`, `firstName`, `lastName`, `email`, `role` FROM `users`';
     const sqlFilters = Object.keys(filters).map((key) => `${key} = ?`);
     if (sqlFilters.length > 0) {
-      query = `${query} WHERE ${sqlFilters.join(" AND ")} LIMIT 1`;
+      query = `${query} WHERE ${sqlFilters.join(' AND ')} LIMIT 1`;
     }
     const [rows]: [RowDataPacket[], unknown] = await client.query(
       query,
@@ -61,11 +61,11 @@ export default class MySQLUserDAO implements IUserDAO {
 
   async create(payload: Partial<User>): Promise<User> {
     try {
-      const fields = Object.keys(payload).join("`, `");
+      const fields = Object.keys(payload).join('`, `');
       const values = Object.values(payload);
       const query = `INSERT INTO \`users\` (\`${fields}\`) VALUES (${values
-        .map(() => "?")
-        .join(", ")})`;
+        .map(() => '?')
+        .join(', ')})`;
       const [result] = await client.query(query, values);
 
       const [rows]: [RowDataPacket[], unknown] = await client.query(
@@ -75,15 +75,16 @@ export default class MySQLUserDAO implements IUserDAO {
 
       const data = rows[0];
       if (!data || !data.id) {
-        throw new Error("Unable to create user");
+        throw new Error('Unable to create user');
       }
       const user = new User(data as unknown as User);
+      console.log('user:', user);
       return user;
     } catch (error) {
       const message = (error as Error).message;
-      if (message.includes("Duplicate entry") && message.includes("email")) {
-        throw new ValidationError("The data is invalid", [
-          { field: "email", message: "This email is already taken" },
+      if (message.includes('Duplicate entry') && message.includes('email')) {
+        throw new ValidationError('The data is invalid', [
+          { field: 'email', message: 'This email is already taken' },
         ]);
       }
       throw error;
@@ -98,7 +99,7 @@ export default class MySQLUserDAO implements IUserDAO {
     const updateValues = Object.values(payload);
     const updateString = updateFields
       .map((field) => `\`${field}\` = ?`)
-      .join(", ");
+      .join(', ');
 
     const [{ affectedRows }]: [ResultSetHeader, unknown] = await client.query(
       `UPDATE \`users\` SET ${updateString} WHERE \`id\` = ?`,

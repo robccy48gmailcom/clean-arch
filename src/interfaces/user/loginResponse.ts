@@ -1,6 +1,6 @@
 // src/interfaces/user/loginResponse.ts
 
-import { User } from "../../entities";
+import { User } from '../../entities';
 
 export default interface ILoginResponse {
   user: Partial<User>;

@@ -1,22 +1,22 @@
 // src/infrastructure/api/express/routes/auth.ts
 
-import express, { NextFunction, Request, Response, Router } from "express";
-import { services } from "../../../../config";
-import { AuthController } from "../../../../controllers";
+import express, { NextFunction, Request, Response, Router } from 'express';
+import { services } from '../../../../config';
+import { AuthController } from '../../../../controllers';
 import {
   AuthorizeUser,
   LoginUser,
   RegisterUser,
   UpdateUser,
-} from "../../../../use-cases/user";
-import { UserArticlesList } from "../../../../use-cases/article";
+} from '../../../../use-cases/user';
+import { UserArticlesList } from '../../../../use-cases/article';
 
 const userDAO = new services.user.DAO();
 const articleDAO = new services.article.DAO();
 
 const controller = new AuthController(
   new RegisterUser(
-    services.user.validators.register,
+    services.user.zodValidators.register,
     userDAO,
     services.utils.encryptPassword,
   ),
@@ -37,7 +37,7 @@ const controller = new AuthController(
 const router: Router = express.Router();
 
 router.post(
-  "/register",
+  '/register',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, firstName, lastName, password, confirmPassword } =
@@ -53,12 +53,13 @@ router.post(
 );
 
 router.post(
-  "/login",
+  '/login',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body;
       const result = await controller.login({ body: { email, password } });
       res.send(result);
+      console.log('Login successful');
     } catch (err) {
       return next(err);
     }
@@ -66,7 +67,7 @@ router.post(
 );
 
 router.get(
-  "/profile",
+  '/profile',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { page, perPage } = req.query as unknown as {
@@ -74,7 +75,7 @@ router.get(
         perPage: number;
       };
       const token =
-        [...(req.headers["authorization"]?.split(" ") || [])].pop() || "";
+        [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
       const result = await controller.profile({
         token,
         params: { page, perPage },
@@ -87,11 +88,11 @@ router.get(
 );
 
 router.put(
-  "/profile",
+  '/profile',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token =
-        [...(req.headers["authorization"]?.split(" ") || [])].pop() || "";
+        [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
       const { email, password, firstName, lastName, confirmPassword } =
         req.body;
       const success = await controller.update({

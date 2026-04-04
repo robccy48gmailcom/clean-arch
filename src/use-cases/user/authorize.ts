@@ -1,24 +1,24 @@
 // src/use-cases/user/authorize.ts
 
-import { User } from "../../entities";
-import { IUserDAO } from "../../interfaces/user";
-import { IUseCase } from "../../interfaces";
-import { UnauthorizedError } from "../../errors";
+import { User } from '../../entities';
+import { IUserDAO } from '../../interfaces/user';
+import { IUseCase } from '../../interfaces';
+import { UnauthorizedError } from '../../errors';
 
 export default class AuthorizeUser implements IUseCase<User> {
   constructor(
     protected userDAO: IUserDAO,
-    protected verifyToken: (token: string) => User
+    protected verifyToken: (token: string) => User,
   ) {}
 
   async call(token: string): Promise<User> {
     if (!token) {
-      throw new UnauthorizedError("You`re not authorized");
+      throw new UnauthorizedError('You`re not authorized');
     }
     const { id } = this.verifyToken(token);
     const user = await this.userDAO.findOneBy({ id });
     if (!user) {
-      throw new UnauthorizedError("You`re not authorized");
+      throw new UnauthorizedError('You`re not authorized');
     }
 
     return user;

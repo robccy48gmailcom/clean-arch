@@ -1,25 +1,25 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { Article } from "../../../entities";
-import { IPaginated } from "../../../interfaces";
-import { IArticleDAO } from "../../../interfaces/article";
-import client from "./client";
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
+import { Article } from '../../../entities';
+import { IPaginated } from '../../../interfaces';
+import { IArticleDAO } from '../../../interfaces/article';
+import client from './client';
 
 export default class MySQLArticleDAO implements IArticleDAO {
   protected async userArticles(
     authorID: number,
     onlyPublished: boolean = true,
     page?: number,
-    perPage?: number
-  ): Promise<Pick<Article, "id" | "title" | "description" | "isPublished">[]> {
+    perPage?: number,
+  ): Promise<Pick<Article, 'id' | 'title' | 'description' | 'isPublished'>[]> {
     let query =
-      "SELECT `id`, `title`, `description` FROM `articles` WHERE `authorID` = ?";
+      'SELECT `id`, `title`, `description` FROM `articles` WHERE `authorID` = ?';
     if (onlyPublished) {
       query = `${query} AND \`isPublished\` = true`;
     }
     const pagination =
       !!page && !!perPage
         ? `LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
-        : "";
+        : '';
 
     const [rows] = await client.query(`${query} ${pagination}`, authorID);
     return (rows as Article[]).map((r) => new Article(r as unknown as Article));
@@ -28,24 +28,24 @@ export default class MySQLArticleDAO implements IArticleDAO {
   async userPublishedArticles(
     authorID: number,
     page?: number,
-    perPage?: number
-  ): Promise<Pick<Article, "id" | "title" | "description" | "isPublished">[]> {
+    perPage?: number,
+  ): Promise<Pick<Article, 'id' | 'title' | 'description' | 'isPublished'>[]> {
     return this.userArticles(authorID, true, page, perPage);
   }
 
   async userAllArticles(
     authorID: number,
     page?: number,
-    perPage?: number
-  ): Promise<Pick<Article, "id" | "title" | "description" | "isPublished">[]> {
+    perPage?: number,
+  ): Promise<Pick<Article, 'id' | 'title' | 'description' | 'isPublished'>[]> {
     return this.userArticles(authorID, false, page, perPage);
   }
 
   async listAsFeed(
     page: number,
-    perPage: number
+    perPage: number,
   ): Promise<
-    IPaginated<Pick<Article, "id" | "title" | "description" | "author">>
+    IPaginated<Pick<Article, 'id' | 'title' | 'description' | 'author'>>
   > {
     const query = `SELECT \`articles\`.\`id\`, \`articles\`.\`title\`, \`articles\`.\`description\`,
                         \`users\`.\`id\` AS \`author.id\`,
@@ -75,7 +75,7 @@ export default class MySQLArticleDAO implements IArticleDAO {
         LEFT JOIN \`users\` ON (\`users\`.\`id\` = \`articles\`.\`authorID\`)
         WHERE \`articles\`.\`id\` = ?
         LIMIT 1`,
-      id
+      id,
     );
 
     if (!rows || !rows[0]) {
@@ -87,24 +87,24 @@ export default class MySQLArticleDAO implements IArticleDAO {
   async create(
     payload: Pick<
       Article,
-      "title" | "description" | "content" | "author" | "isPublished"
-    >
+      'title' | 'description' | 'content' | 'author' | 'isPublished'
+    >,
   ): Promise<Article> {
-    const fields = Object.keys(payload).join("`, `");
+    const fields = Object.keys(payload).join('`, `');
     const values = Object.values(payload);
     const query = `INSERT INTO \`articles\` (\`${fields}\`) VALUES (${values
-      .map(() => "?")
-      .join(", ")})`;
+      .map(() => '?')
+      .join(', ')})`;
     const [{ insertId }]: [ResultSetHeader, unknown] = await client.query(
       query,
-      values
+      values,
     );
     const [rows]: [RowDataPacket[], unknown] = await client.query(
       `SELECT * FROM \`articles\` WHERE \`id\` = ? LIMIT 1`,
-      insertId
+      insertId,
     );
     if (!rows || !rows[0]) {
-      throw new Error("Unable to create article");
+      throw new Error('Unable to create article');
     }
     return new Article(rows[0] as unknown as Article);
   }
@@ -113,12 +113,12 @@ export default class MySQLArticleDAO implements IArticleDAO {
     id: number,
     payload: Pick<
       Article,
-      "title" | "description" | "content" | "author" | "isPublished"
-    >
+      'title' | 'description' | 'content' | 'author' | 'isPublished'
+    >,
   ): Promise<Article> {
     const fields = Object.keys(payload)
       .map((f) => `\`${f}\` = ?`)
-      .join(", ");
+      .join(', ');
     const values = [...Object.values(payload), id];
     const query = `UPDATE \`articles\` SET ${fields} WHERE \`id\` = ?`;
 
@@ -134,29 +134,29 @@ export default class MySQLArticleDAO implements IArticleDAO {
     }
     const [result]: [ResultSetHeader, unknown] = await client.query(
       `DELETE FROM \`articles\` WHERE \`id\` = ? ${
-        userID ? "AND `authorID` = ?" : ""
+        userID ? 'AND `authorID` = ?' : ''
       }`,
-      queryValues
+      queryValues,
     );
 
     return result.affectedRows > 0;
   }
 
   private normalizeArticle(
-    article: Partial<Article> & Record<string, unknown>
+    article: Partial<Article> & Record<string, unknown>,
   ): Article {
-    if (article["author.id"]) {
+    if (article['author.id']) {
       Object.assign(article, {
         author: {
-          id: article["author.id"],
-          firstName: article["author.firstName"],
-          lastName: article["author.lastName"],
+          id: article['author.id'],
+          firstName: article['author.firstName'],
+          lastName: article['author.lastName'],
         },
       });
 
-      delete article["author.id"];
-      delete article["author.firstName"];
-      delete article["author.lastName"];
+      delete article['author.id'];
+      delete article['author.firstName'];
+      delete article['author.lastName'];
     }
     return new Article(article);
   }

@@ -1,9 +1,9 @@
 // src/use-cases/article/view.ts
 
-import { Article } from "../../entities";
-import { NotFoundError } from "../../errors";
-import { IUseCase } from "../../interfaces";
-import { IArticleDAO } from "../../interfaces/article";
+import { Article } from '../../entities';
+import { NotFoundError } from '../../errors';
+import { IUseCase } from '../../interfaces';
+import { IArticleDAO } from '../../interfaces/article';
 
 export default class ViewArticle implements IUseCase<Article> {
   constructor(protected articleDAO: IArticleDAO) {}
@@ -16,7 +16,7 @@ export default class ViewArticle implements IUseCase<Article> {
         article.authorID !== userID &&
         !!article.authorID)
     ) {
-      throw new NotFoundError("Article was not found");
+      throw new NotFoundError('Article was not found');
     }
     return article;
   }

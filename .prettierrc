@@ -1,0 +1,15 @@
+{
+  "semi": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "arrowParens": "always",
+  "singleQuote": true,
+  "overrides": [
+    {
+      "files": ".yarnrc.yml",
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
+}

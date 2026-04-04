@@ -1,5 +1,5 @@
 // app/src/entities/index.ts
 
-import IArticleDAO from "./articleDAO";
+import IArticleDAO from './articleDAO';
 
 export type { IArticleDAO };

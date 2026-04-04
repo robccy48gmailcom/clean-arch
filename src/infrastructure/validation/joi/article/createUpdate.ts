@@ -1,7 +1,7 @@
 // src/infrastructure/validation/joi/article/createUpdate.ts
 
-import * as Joi from "joi";
-import JOIValidator from "../validator";
+import * as Joi from 'joi';
+import JOIValidator from '../validator';
 
 const articleValidator = Joi.object({
   title: Joi.string().required(),

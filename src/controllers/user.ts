@@ -1,7 +1,7 @@
 // src/controllers/user.ts
 
-import { IRequest, IUseCase } from "../interfaces";
-import { User } from "../entities";
+import { IRequest, IUseCase } from '../interfaces';
+import { User } from '../entities';
 
 export default class UserController {
   constructor(protected userProfile: IUseCase<User>) {}

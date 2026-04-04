@@ -1,9 +1,9 @@
-import readline from "node:readline";
-import { services } from "../../config";
-import { ScriptsController } from "../../controllers";
-import { IError } from "../../interfaces";
-import { CreateUser } from "../../use-cases/user";
-import { User } from "../../entities";
+import readline from 'node:readline';
+import { services } from '../../config';
+import { ScriptsController } from '../../controllers';
+import { IError } from '../../interfaces';
+import { CreateUser } from '../../use-cases/user';
+import { User } from '../../entities';
 
 const consoleReader = readline.createInterface({
   input: process.stdin,
@@ -24,32 +24,41 @@ const createUser = new CreateUser(
 const controller = new ScriptsController(createUser);
 
 const commands: Record<string, () => Promise<unknown>> = {
-  "create-admin": async () => {
+  'create-admin': async () => {
     try {
       const body = {
-        email: await getInput("Enter Admin email address: "),
-        password: await getInput("Create Admin password: "),
+        email: await getInput('Enter Admin email address: '),
+        password: await getInput('Create Admin password: '), //qwe123
       };
       consoleReader.close();
 
       const admin: User = await controller.createAdmin({ body });
-      console.log("Admin Created!");
+      console.log('Admin Created!');
       console.log(`You can now login with: ${admin.email}`);
     } catch (error) {
-      const response = error as IError;
-      console.log(`${response.name}: ${response.message}`);
-      if (response.details) {
-        console.log(response.details);
+      const err = error as IError & Error;
+      const name = err?.name ?? 'Error';
+      const message =
+        err?.message ??
+        (typeof error === 'object' && error !== null && 'message' in error
+          ? String((error as { message: unknown }).message)
+          : String(error));
+      console.error(`${name}: ${message}`);
+      if (err?.details) {
+        console.error(err.details);
+      }
+      if (process.env.DEBUG && error instanceof Error && error.stack) {
+        console.error(error.stack);
       }
     }
   },
 };
 
 const cli = async () => {
-  const availableCommands = Object.keys(commands).join(", ");
+  const availableCommands = Object.keys(commands).join(', ');
   const commandName = process.argv[2];
 
-  if (!commandName && typeof commandName !== "string") {
+  if (!commandName && typeof commandName !== 'string') {
     console.error(
       `Please choose one of the following commands: ${availableCommands}`,
     );

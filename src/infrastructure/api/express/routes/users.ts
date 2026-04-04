@@ -1,11 +1,11 @@
 // src/infrastructure/api/express/routes/users.ts
 
-import * as express from "express";
-import { NextFunction, Request, Response } from "express";
+import * as express from 'express';
+import { NextFunction, Request, Response } from 'express';
 
-import { services } from "../../../../config";
-import { UserController } from "../../../../controllers";
-import { UserProfile } from "../../../../use-cases/user";
+import { services } from '../../../../config';
+import { UserController } from '../../../../controllers';
+import { UserProfile } from '../../../../use-cases/user';
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ const controller = new UserController(
   new UserProfile(new services.user.DAO(), new services.article.DAO()),
 );
 
-router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     let result = null;
     if (req.params.id) {
@@ -22,7 +22,7 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
         page: number;
         perPage: number;
       };
-      const result = await controller.profile({
+      result = await controller.profile({
         params: { id, page, perPage },
       });
     }

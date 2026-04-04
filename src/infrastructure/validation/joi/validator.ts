@@ -1,8 +1,8 @@
 // src/inftrastructure/validation/joi/validator.ts
 
-import * as Joi from "joi";
-import { IValidator } from "../../../interfaces";
-import { IValidationResult } from "../../../interfaces/validator";
+import * as Joi from 'joi';
+import { IValidator } from '../../../interfaces';
+import { IValidationResult } from '../../../interfaces/validator';
 
 export default class JOIValidator<T> implements IValidator<T> {
   constructor(protected schema: Joi.Schema<T>) {}
@@ -11,7 +11,7 @@ export default class JOIValidator<T> implements IValidator<T> {
     const result = this.schema.validate(data);
     const errors = result.error
       ? result.error.details.map((ed) => ({
-          field: ed.path.join("."),
+          field: ed.path.join('.'),
           message: ed.message,
         }))
       : [];

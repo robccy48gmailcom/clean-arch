@@ -1,14 +1,14 @@
 // src/infrastructure/validation/joi/user/create.ts
 
-import * as Joi from "joi";
-import JOIValidator from "../validator";
+import * as Joi from 'joi';
+import JOIValidator from '../validator';
 
 const createValidator = Joi.object({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  role: Joi.string().valid("admin", "user").required(),
+  role: Joi.string().valid('admin', 'user').required(),
 });
 
 export default new JOIValidator(createValidator);

@@ -1,13 +1,13 @@
 // app/src/entities/user.ts
 
-import Article from "./article";
-import Entity from "./entity";
+import Article from './article';
+import Entity from './entity';
 
 export default class User extends Entity<User> {
   id!: number;
   firstName!: string;
   lastName!: string;
   email!: string;
-  role!: "user" | "admin";
+  role!: 'user' | 'admin';
   articles?: Article[];
 }

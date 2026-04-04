@@ -1,13 +1,13 @@
 // src/use-cases/user/fetchAuthorized.ts
 
-import { User } from "../../entities";
-import { IUseCase } from "../../interfaces";
-import { IUserDAO } from "../../interfaces/user";
+import { User } from '../../entities';
+import { IUseCase } from '../../interfaces';
+import { IUserDAO } from '../../interfaces/user';
 
 export default class FetchAuthorisedUser implements IUseCase<User | null> {
   constructor(
     protected userDAO: IUserDAO,
-    protected verifyToken: (token: string) => User
+    protected verifyToken: (token: string) => User,
   ) {}
 
   async call(token: string): Promise<User | null> {

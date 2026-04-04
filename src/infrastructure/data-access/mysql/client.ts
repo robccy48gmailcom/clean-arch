@@ -1,7 +1,7 @@
 // src/infrastructure/data-access/mysql/client.ts
 
-import mysql from "mysql2/promise";
-import { app } from "../../../config";
+import mysql from 'mysql2/promise';
+import { app } from '../../../config';
 
 const client = mysql.createPool({
   host: app.database.host,

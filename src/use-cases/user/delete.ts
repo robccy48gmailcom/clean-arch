@@ -1,7 +1,7 @@
 // src/use-cases/user/delete.ts
 
-import { IUseCase } from "../../interfaces";
-import { IUserDAO } from "../../interfaces/user";
+import { IUseCase } from '../../interfaces';
+import { IUserDAO } from '../../interfaces/user';
 
 export default class DeleteUser implements IUseCase<boolean> {
   constructor(protected userDAO: IUserDAO) {}

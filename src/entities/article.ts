@@ -1,8 +1,8 @@
 // app/src/entities/article.ts
 
-import Entity from "./entity";
-import User from "./user";
-
+import Entity from './entity';
+import User from './user';
+//extend is for class inheritance
 export default class Article extends Entity<Article> {
   id!: number;
   isPublished!: boolean;
