@@ -4,10 +4,10 @@ import * as Joi from 'joi';
 import JOIValidator from '../validator';
 
 const adminValidator = Joi.object({
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  email: Joi.string().email().required(),
-  role: Joi.string().allow('user', 'admin').only().required(),
+  firstName: Joi.string().optional(),
+  lastName: Joi.string().optional(),
+  email: Joi.string().email().optional(),
+  role: Joi.string().allow('user', 'admin').only().optional(),
   password: Joi.string().min(6).optional(),
   confirmPassword: Joi.when(Joi.ref('password'), {
     is: Joi.required(),

@@ -7,7 +7,6 @@ export default class ZodValidator<T> implements IValidator<T> {
 
     public validate(data: Partial<T>): IValidationResult<T> {
         const result = this.schema.safeParse(data);
-        console.log("result of safeparse", result)
 
         if (result.success) {
             return { data: result.data, errors: [] };

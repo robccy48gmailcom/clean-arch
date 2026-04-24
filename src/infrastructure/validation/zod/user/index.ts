@@ -1,3 +1,6 @@
 import register from './register';
+import create from './create';
+import adminUpdate from './adminUpdate'
+import userUpdate from './userUpdate'
 
-export { register }
+export { register, create, adminUpdate, userUpdate }

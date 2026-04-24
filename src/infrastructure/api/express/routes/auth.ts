@@ -28,7 +28,7 @@ const controller = new AuthController(
   new AuthorizeUser(userDAO, services.utils.verifyToken),
   new UserArticlesList(articleDAO),
   new UpdateUser(
-    services.user.validators.update,
+    services.user.zodValidators.userUpdate,
     userDAO,
     services.utils.encryptPassword,
   ),
@@ -75,7 +75,7 @@ router.get(
         perPage: number;
       };
       const token =
-        [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
+        req.headers['authorization']?.split(' ').pop() || '';
       const result = await controller.profile({
         token,
         params: { page, perPage },
@@ -92,12 +92,13 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token =
-        [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
-      const { email, password, firstName, lastName, confirmPassword } =
+        req.headers['authorization']?.split(' ').pop() || '';
+      const body =
         req.body;
+
       const success = await controller.update({
         token,
-        body: { email, password, firstName, lastName, confirmPassword },
+        body
       });
       res.send({ success });
     } catch (err) {

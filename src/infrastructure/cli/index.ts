@@ -2,7 +2,7 @@ import readline from 'node:readline';
 import { services } from '../../config';
 import { ScriptsController } from '../../controllers';
 import { IError } from '../../interfaces';
-import { CreateUser } from '../../use-cases/user';
+import { CreateAdmin } from '../../use-cases/user';
 import { User } from '../../entities';
 
 const consoleReader = readline.createInterface({
@@ -16,12 +16,12 @@ function getInput(prompt: string): Promise<string> {
     });
   });
 }
-const createUser = new CreateUser(
-  services.user.validators.create,
+const createAdmin = new CreateAdmin(
+  services.user.zodValidators.create,
   new services.user.DAO(),
   services.utils.encryptPassword,
 );
-const controller = new ScriptsController(createUser);
+const controller = new ScriptsController(createAdmin);
 
 const commands: Record<string, () => Promise<unknown>> = {
   'create-admin': async () => {
@@ -29,6 +29,8 @@ const commands: Record<string, () => Promise<unknown>> = {
       const body = {
         email: await getInput('Enter Admin email address: '),
         password: await getInput('Create Admin password: '), //qwe123
+        firstName: await getInput('Enter first name: '),
+        lastName: await getInput('Enter last name: ')
       };
       consoleReader.close();
 

@@ -13,7 +13,7 @@ export default class AuthController {
       Pick<Article, 'id' | 'title' | 'description' | 'isPublished'>[]
     >,
     protected updateProfile: IUseCase<boolean>,
-  ) {}
+  ) { }
 
   async register(request: IRequest): Promise<{ success: boolean }> {
     const userPayload = request.body;
@@ -30,7 +30,7 @@ export default class AuthController {
   }
 
   async profile(request: IRequest): Promise<User> {
-    const user = await this.authorizeUser.call(request.token, false);
+    const user = await this.authorizeUser.call(request.token);
     const page = parseInt(request.params?.page as string) || 1;
     const perPage = parseInt(request.params?.perPage as string) || 10;
     const articles = await this.userArticles.call(

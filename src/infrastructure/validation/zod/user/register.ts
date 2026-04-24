@@ -1,7 +1,8 @@
 import { z } from "zod";
-import ZodValidator from "../validator"
+import ZodValidator from "../validator";
+import { RegisterInput } from '../../../../interfaces/user'
 
-const registerSchema = z.object({
+const registerSchema: z.ZodType<RegisterInput> = z.object({
     firstName: z.string(),
     lastName: z.string(),
     email: z.string(),

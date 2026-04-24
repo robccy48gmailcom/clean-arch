@@ -42,6 +42,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
 router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log("req:", req)
     const { id } = req.params as unknown as { id: string };
     const token =
       [...(req.headers['authorization']?.split(' ') || [])].pop() || '';

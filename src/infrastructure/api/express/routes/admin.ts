@@ -16,7 +16,7 @@ const controller = new AdminController(
   new AuthorizeAdmin(userDAO, services.utils.verifyToken),
   new ListUsers(userDAO),
   new UpdateUser(
-    services.user.validators.adminUpdate,
+    services.user.zodValidators.adminUpdate,
     userDAO,
     services.utils.encryptPassword,
   ),
@@ -27,7 +27,7 @@ const router = express.Router();
 
 router.use((req: Request, _res: Response, next: NextFunction) => {
   const token =
-    [...(req.headers['authorization']?.split(' ') || [])].pop() || '';
+    req.headers['authorization']?.split(' ').pop() || '';
   Object.assign(req, { token });
   next();
 });
@@ -36,6 +36,7 @@ router.get(
   '/users',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+
       const token = (req as unknown as { token: string }).token;
       const { page, perPage } = req.query as unknown as {
         page: number;

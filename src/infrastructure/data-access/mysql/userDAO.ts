@@ -105,7 +105,6 @@ export default class MySQLUserDAO implements IUserDAO {
       `UPDATE \`users\` SET ${updateString} WHERE \`id\` = ?`,
       [...updateValues, id],
     );
-
     return affectedRows > 0;
   }
 

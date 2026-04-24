@@ -14,7 +14,7 @@ export default class ArticleController {
     protected createArticle: IUseCase<Article>,
     protected updateArticle: IUseCase<Article>,
     protected deleteArticle: IUseCase<boolean>,
-  ) {}
+  ) { }
 
   async feed(
     request: IRequest,
@@ -22,7 +22,7 @@ export default class ArticleController {
     IPaginated<Pick<Article, 'id' | 'title' | 'description' | 'author'>>
   > {
     const page = parseInt(`${request.params?.page}`) || 1;
-    const perPage = parseInt(`${request.params?.perPage}`) || 10;
+    const perPage = parseInt(`${request.params?.perPage}`) || 2;
     return this.articleFeed.call(page, perPage);
   }
 

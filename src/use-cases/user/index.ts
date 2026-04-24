@@ -1,6 +1,6 @@
 import AuthorizeUser from './authorize';
 import AuthorizeAdmin from './authorizeAdmin';
-import CreateUser from './create';
+import CreateAdmin from './create';
 import DeleteUser from './delete';
 import FetchAuthorisedUser from './fetchAuthorized';
 import ListUsers from './list';
@@ -11,7 +11,7 @@ import RegisterUser from './register';
 export {
   AuthorizeUser,
   AuthorizeAdmin,
-  CreateUser,
+  CreateAdmin,
   DeleteUser,
   FetchAuthorisedUser,
   ListUsers,
