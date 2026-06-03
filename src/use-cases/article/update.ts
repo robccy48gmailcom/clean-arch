@@ -1,18 +1,29 @@
 // src/use-cases/article/update.ts
 
 import { Article, User } from '../../entities';
-import { NotFoundError, UnauthorizedError } from '../../errors';
-import { IUseCase } from '../../interfaces';
-import { IArticleDAO } from '../../interfaces/article';
+import {
+  NotFoundError,
+  UnauthorizedError,
+  ValidationError,
+} from '../../errors';
+import { IUseCase, IValidator } from '../../interfaces';
+import { IArticleDAO, UpdateArticleInput } from '../../interfaces/article';
 
 export default class UpdateArticle implements IUseCase<Article> {
-  constructor(protected articleDAO: IArticleDAO) {}
+  constructor(
+    protected validator: IValidator<UpdateArticleInput>,
+    protected articleDAO: IArticleDAO,
+  ) {}
 
   async call(
     id: number,
     user: Pick<User, 'id' | 'role'>,
-    payload: Pick<Article, 'title' | 'content' | 'description' | 'isPublished'>,
+    payload: UpdateArticleInput,
   ): Promise<Article> {
+    const { data, errors } = this.validator.validate(payload);
+    if (errors && errors.length > 0) {
+      throw new ValidationError('Data is invalid', errors);
+    }
     const article = await this.articleDAO.findOne(id);
     if (!article) {
       throw new NotFoundError('Article not found');
@@ -21,6 +32,6 @@ export default class UpdateArticle implements IUseCase<Article> {
       throw new UnauthorizedError('You are not allowed to update this article');
     }
 
-    return this.articleDAO.update(id, payload);
+    return this.articleDAO.update(id, data);
   }
 }

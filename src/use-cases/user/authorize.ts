@@ -11,7 +11,7 @@ export default class AuthorizeUser implements IUseCase<User> {
     protected verifyToken: (token: string) => User,
   ) {}
 
-  async call(token: string): Promise<User> {
+  async callOri(token: string): Promise<User> {
     if (!token) {
       throw new UnauthorizedError('You`re not authorized');
     }
@@ -22,5 +22,25 @@ export default class AuthorizeUser implements IUseCase<User> {
     }
 
     return user;
+  }
+
+  call(token: string): Promise<User> {
+    if (!token) {
+      throw new UnauthorizedError('You`re not authorized');
+    }
+    const { id } = this.verifyToken(token);
+
+    const p = new Promise<User>((resolve, reject) => {
+      this.userDAO
+        .findOneBy({ id })
+        .then((user) => {
+          if (!user) {
+            throw new UnauthorizedError('You`re not authorized');
+          }
+          resolve(user);
+        })
+        .catch(reject);
+    });
+    return p;
   }
 }

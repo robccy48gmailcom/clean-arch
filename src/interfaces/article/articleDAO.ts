@@ -27,12 +27,6 @@ export default interface IArticleDAO {
       'title' | 'description' | 'content' | 'author' | 'isPublished'
     >,
   ): Promise<Article>;
-  update(
-    id: number,
-    payload: Pick<
-      Article,
-      'title' | 'description' | 'content' | 'author' | 'isPublished'
-    >,
-  ): Promise<Article>;
+  update(id: number, payload: Partial<Article>): Promise<Article>;
   delete(id: number, userID?: number): Promise<boolean>;
 }

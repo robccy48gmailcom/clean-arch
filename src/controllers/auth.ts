@@ -13,7 +13,8 @@ export default class AuthController {
       Pick<Article, 'id' | 'title' | 'description' | 'isPublished'>[]
     >,
     protected updateProfile: IUseCase<boolean>,
-  ) { }
+    protected changePassword: IUseCase<boolean>,
+  ) {}
 
   async register(request: IRequest): Promise<{ success: boolean }> {
     const userPayload = request.body;
@@ -46,5 +47,23 @@ export default class AuthController {
   async update(request: IRequest): Promise<boolean> {
     const user = await this.authorizeUser.call(request.token);
     return this.updateProfile.call(user.id, request.body);
+  }
+
+  updatePasswordPromise(request: IRequest): Promise<boolean> {
+    const p = new Promise<boolean>((resolve, reject) => {
+      this.authorizeUser
+        .call(request.token)
+        .then((user) => this.changePassword.call(user.id, request.body))
+        .then((success) => {
+          resolve(success);
+        })
+        .catch(reject);
+    });
+    return p;
+  }
+
+  async updatePassword(request: IRequest): Promise<boolean> {
+    const user = await this.authorizeUser.call(request.token);
+    return this.changePassword.call(user.id, request.body);
   }
 }

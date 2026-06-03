@@ -3,13 +3,13 @@
 import { Article, User } from '../../entities';
 import { ValidationError } from '../../errors';
 import { IUseCase, IValidator } from '../../interfaces';
-import { IArticleDAO } from '../../interfaces/article';
+import { IArticleDAO, CreateArticleInput } from '../../interfaces/article';
 
 export default class CreateArticle implements IUseCase<Article> {
   constructor(
-    protected validator: IValidator<Article>,
+    protected validator: IValidator<CreateArticleInput>,
     protected articleDAO: IArticleDAO,
-  ) { }
+  ) {}
 
   async call(
     user: User,
@@ -19,7 +19,7 @@ export default class CreateArticle implements IUseCase<Article> {
     if (errors && errors.length > 0) {
       throw new ValidationError('The data is invalid', errors);
     }
-    console.log("data: ", data)
+    console.log('data: ', data);
     const article = new Article(data);
     Object.assign(article, {
       authorID: user.id,

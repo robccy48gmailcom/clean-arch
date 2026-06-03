@@ -20,8 +20,8 @@ const controller = new ArticleController(
   new FetchAuthorisedUser(userDAO, services.utils.verifyToken),
   new ArticleFeed(articleDAO),
   new ViewArticle(articleDAO),
-  new CreateArticle(services.article.validators.createUpdate, articleDAO),
-  new UpdateArticle(articleDAO),
+  new CreateArticle(services.article.zodValidators.createArticle, articleDAO),
+  new UpdateArticle(services.article.zodValidators.articleUpdate, articleDAO),
   new DeleteArticle(articleDAO),
 );
 
@@ -42,7 +42,6 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
 router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("req:", req)
     const { id } = req.params as unknown as { id: string };
     const token =
       [...(req.headers['authorization']?.split(' ') || [])].pop() || '';

@@ -8,6 +8,7 @@ import {
   LoginUser,
   RegisterUser,
   UpdateUser,
+  ChangePassword,
 } from '../../../../use-cases/user';
 import { UserArticlesList } from '../../../../use-cases/article';
 
@@ -27,8 +28,9 @@ const controller = new AuthController(
   ),
   new AuthorizeUser(userDAO, services.utils.verifyToken),
   new UserArticlesList(articleDAO),
-  new UpdateUser(
-    services.user.zodValidators.userUpdate,
+  new UpdateUser(services.user.zodValidators.userUpdate, userDAO),
+  new ChangePassword(
+    services.user.zodValidators.changePassword,
     userDAO,
     services.utils.encryptPassword,
   ),
@@ -74,8 +76,7 @@ router.get(
         page: number;
         perPage: number;
       };
-      const token =
-        req.headers['authorization']?.split(' ').pop() || '';
+      const token = req.headers['authorization']?.split(' ').pop() || '';
       const result = await controller.profile({
         token,
         params: { page, perPage },
@@ -91,19 +92,44 @@ router.put(
   '/profile',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token =
-        req.headers['authorization']?.split(' ').pop() || '';
-      const body =
-        req.body;
+      const token = req.headers['authorization']?.split(' ').pop() || '';
+      const body = req.body;
 
       const success = await controller.update({
         token,
-        body
+        body,
       });
       res.send({ success });
     } catch (err) {
       return next(err);
     }
+  },
+);
+
+router.put(
+  '/password',
+  async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers['authorization']?.split(' ').pop() || '';
+    const body = req.body;
+
+    controller
+      .updatePassword({ token, body })
+      .then((success) => {
+        res.send({ success });
+      })
+      .catch((err) => next(err));
+    // try {
+    //   const token = req.headers['authorization']?.split(' ').pop() || '';
+    //   const body = req.body;
+
+    //   const success = await controller.updatePassword({
+    //     token,
+    //     body,
+    //   });
+    //   res.send({ success });
+    // } catch (err) {
+    //   return next(err);
+    // }
   },
 );
 

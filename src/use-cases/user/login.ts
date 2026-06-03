@@ -13,8 +13,11 @@ export default class LoginUser implements IUseCase<ILoginResponse> {
       input: string,
       encrypted: string,
     ) => Promise<boolean>,
-    protected issueToken: (payload: Partial<User>, expiresIn?: SignOptions['expiresIn']) => string,
-  ) { }
+    protected issueToken: (
+      payload: Partial<User>,
+      expiresIn?: SignOptions['expiresIn'],
+    ) => string,
+  ) {}
 
   async call(email: string, password: string): Promise<ILoginResponse> {
     if (!email || !password) {
@@ -29,7 +32,7 @@ export default class LoginUser implements IUseCase<ILoginResponse> {
       const { id, firstName, lastName, email, role } = user;
       return {
         user: { id, firstName, lastName, email, role },
-        token: this.issueToken({ id, firstName, lastName, email }, "2d"),
+        token: this.issueToken({ id, firstName, lastName, email }, '2d'),
       };
     } else {
       throw new UnauthorizedError('Invalid login or password');

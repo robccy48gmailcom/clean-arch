@@ -109,13 +109,8 @@ export default class MySQLArticleDAO implements IArticleDAO {
     return new Article(rows[0] as unknown as Article);
   }
 
-  async update(
-    id: number,
-    payload: Pick<
-      Article,
-      'title' | 'description' | 'content' | 'author' | 'isPublished'
-    >,
-  ): Promise<Article> {
+  async update(id: number, payload: Partial<Article>): Promise<Article> {
+    console.log('payload:', payload);
     const fields = Object.keys(payload)
       .map((f) => `\`${f}\` = ?`)
       .join(', ');

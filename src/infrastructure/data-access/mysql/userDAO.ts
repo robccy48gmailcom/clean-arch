@@ -91,7 +91,7 @@ export default class MySQLUserDAO implements IUserDAO {
     }
   }
 
-  async update(id: number, payload: Partial<User>): Promise<boolean> {
+  async update(id: number, payload: Partial<AuthUser>): Promise<boolean> {
     const updateFields = Object.keys(payload);
     if (updateFields.length === 0) {
       return false;

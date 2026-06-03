@@ -12,6 +12,6 @@ export default interface IUserDAO {
   findOneBy(filters: Partial<User>): Promise<User | null>;
   findForAuth(email: string): Promise<AuthUser | null>;
   create(payload: Partial<User>): Promise<User>;
-  update(id: number, payload: Partial<User>): Promise<boolean>;
+  update(id: number, payload: Partial<AuthUser>): Promise<boolean>;
   delete(id: number): Promise<boolean>;
 }

@@ -8,6 +8,7 @@ import LoginUser from './login';
 import UserProfile from './profile';
 import UpdateUser from './update';
 import RegisterUser from './register';
+import ChangePassword from './changePassword';
 export {
   AuthorizeUser,
   AuthorizeAdmin,
@@ -19,4 +20,5 @@ export {
   UserProfile,
   UpdateUser,
   RegisterUser,
+  ChangePassword,
 };

@@ -14,11 +14,12 @@ export default {
   user: {
     validators: validators.user,
     DAO: MySQLUserDAO,
-    zodValidators: zodValidators.user
+    zodValidators: zodValidators.user,
   },
   article: {
     validators: validators.article,
     DAO: MySQLArticleDAO,
+    zodValidators: zodValidators.article,
   },
   utils: {
     encryptPassword,
