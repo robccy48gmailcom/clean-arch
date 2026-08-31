@@ -20,6 +20,7 @@ const controller = new AuthController(
     services.user.zodValidators.register,
     userDAO,
     services.utils.encryptPassword,
+    services.utils.issueToken,
   ),
   new LoginUser(
     userDAO,

@@ -84,7 +84,7 @@ export default class MySQLUserDAO implements IUserDAO {
       const message = (error as Error).message;
       if (message.includes('Duplicate entry') && message.includes('email')) {
         throw new ValidationError('The data is invalid', [
-          { field: 'email', message: 'This email is already taken' },
+          { field: 'email', message: 'Register Failed' },
         ]);
       }
       throw error;

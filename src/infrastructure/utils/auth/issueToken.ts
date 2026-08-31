@@ -5,7 +5,12 @@ import type { SignOptions } from 'jsonwebtoken';
 import { app } from '../../../config';
 import { User } from '../../../entities';
 
-export default (payload: Partial<User>, expiresIn?: SignOptions['expiresIn']): string => {
+type TokenPayload = Partial<User> & { purpose?: string };
+
+export default (
+  payload: TokenPayload,
+  expiresIn?: SignOptions['expiresIn'],
+): string => {
   const jwtToken = jwt.sign(
     payload,
     app.jwtSecret as string,

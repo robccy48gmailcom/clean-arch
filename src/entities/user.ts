@@ -10,4 +10,5 @@ export default class User extends Entity<User> {
   email!: string;
   role!: 'user' | 'admin';
   articles?: Article[];
+  emailVerified!: boolean;
 }

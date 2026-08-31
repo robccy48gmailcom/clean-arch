@@ -9,7 +9,7 @@
     "dev": "ts-node-dev ./bin/app",
     "cli": "node ./bin/cli",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate:new": "db-migrate create $1 --sql-file -m src/infrastructure/data-access/mysql/migrations --config src/infrastructure/data-access/mysql/database.json",
+    "migrate:new": "node scripts/migrate-new.js",
     "migrate:up": "db-migrate up -m src/infrastructure/data-access/mysql/migrations --config src/infrastructure/data-access/mysql/database.json",
     "migrate:down": "db-migrate down -m src/infrastructure/data-access/mysql/migrations --config src/infrastructure/data-access/mysql/database.json"
   },

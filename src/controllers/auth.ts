@@ -23,6 +23,7 @@ export default class AuthController {
   }
 
   async login(request: IRequest): Promise<ILoginResponse> {
+    //await new Promise((r) => setTimeout(r, 5000));
     const { email, password } = request.body as {
       email: string;
       password: string;
@@ -31,6 +32,7 @@ export default class AuthController {
   }
 
   async profile(request: IRequest): Promise<User> {
+    //await new Promise((r) => setTimeout(r, 5000));
     const user = await this.authorizeUser.call(request.token);
     const page = parseInt(request.params?.page as string) || 1;
     const perPage = parseInt(request.params?.perPage as string) || 10;

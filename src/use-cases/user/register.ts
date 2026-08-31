@@ -4,6 +4,7 @@ import { IUseCase, IValidator } from '../../interfaces';
 import { IUserDAO, RegisterInput } from '../../interfaces/user';
 import { User } from '../../entities';
 import { ValidationError } from '../../errors';
+import type { SignOptions } from 'jsonwebtoken';
 
 export default class RegisterUser implements IUseCase<User> {
   constructor(
@@ -12,13 +13,17 @@ export default class RegisterUser implements IUseCase<User> {
     protected encryptPassword: (
       password: string,
     ) => Promise<{ password: string; salt: string }>,
-  ) { }
+    protected issueToken: (
+      payload: Partial<User> & { purpose?: string },
+      expiresIn?: SignOptions['expiresIn'],
+    ) => string,
+  ) {}
 
   async call(payload: Partial<RegisterInput>): Promise<User> {
     const { data, errors } = this.validator.validate(payload);
-    console.log("data in register user", data);
+    console.log('data in register user', data);
     if (errors && errors.length > 0) {
-      console.error("errors in register user", errors);
+      console.error('errors in register user', errors);
       throw new ValidationError('The data is invalid', errors);
     }
     delete data.confirmPassword;
@@ -30,6 +35,13 @@ export default class RegisterUser implements IUseCase<User> {
       salt,
     });
 
-    return this.userDAO.create(data);
+    const user = await this.userDAO.create(data);
+
+    const verifyToken = this.issueToken(
+      { id: user.id, email: user.email, purpose: 'email-verify' },
+      '1d',
+    );
+
+    return user;
   }
 }
