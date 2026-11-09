@@ -5,6 +5,7 @@ import { IUserDAO, RegisterInput } from '../../interfaces/user';
 import { User } from '../../entities';
 import { ValidationError } from '../../errors';
 import type { SignOptions } from 'jsonwebtoken';
+import { TokenPayload } from '../../infrastructure/utils';
 
 export default class RegisterUser implements IUseCase<User> {
   constructor(
@@ -14,9 +15,10 @@ export default class RegisterUser implements IUseCase<User> {
       password: string,
     ) => Promise<{ password: string; salt: string }>,
     protected issueToken: (
-      payload: Partial<User> & { purpose?: string },
+      payload: TokenPayload,
       expiresIn?: SignOptions['expiresIn'],
     ) => string,
+    protected sendVerificationEmail: (to: string, token: string) => void,
   ) {}
 
   async call(payload: Partial<RegisterInput>): Promise<User> {
@@ -41,7 +43,7 @@ export default class RegisterUser implements IUseCase<User> {
       { id: user.id, email: user.email, purpose: 'email-verify' },
       '1d',
     );
-
+    await this.sendVerificationEmail(user.email, verifyToken);
     return user;
   }
 }

@@ -9,9 +9,11 @@ import {
   RegisterUser,
   UpdateUser,
   ChangePassword,
+  VerifyEmail,
+  SendResetPasswordEmail,
+  ResetPassword,
 } from '../../../../use-cases/user';
 import { UserArticlesList } from '../../../../use-cases/article';
-
 const userDAO = new services.user.DAO();
 const articleDAO = new services.article.DAO();
 
@@ -21,6 +23,7 @@ const controller = new AuthController(
     userDAO,
     services.utils.encryptPassword,
     services.utils.issueToken,
+    services.utils.sendVerificationEmail,
   ),
   new LoginUser(
     userDAO,
@@ -35,6 +38,14 @@ const controller = new AuthController(
     userDAO,
     services.utils.encryptPassword,
   ),
+  new VerifyEmail(userDAO, services.utils.verifyToken),
+  new SendResetPasswordEmail(
+    services.user.zodValidators.forgotPassword,
+    services.utils.resetPasswordEmail,
+    userDAO,
+    services.utils.issueToken,
+  ),
+  new ResetPassword(),
 );
 
 const router: Router = express.Router();
@@ -131,6 +142,49 @@ router.put(
     // } catch (err) {
     //   return next(err);
     // }
+  },
+);
+
+router.post(
+  '/verify-email',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { token } = req.body;
+      const success = await controller.verifyEmailAddress({ token });
+      res.send({ success });
+    } catch (err) {
+      return next(err);
+    }
+  },
+);
+
+router.post(
+  '/forgot-password',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email } = req.body;
+      const success = await controller.sendPasswordResetEmail({
+        body: { email },
+      });
+      res.send({ success });
+    } catch (err) {
+      return next(err);
+    }
+  },
+);
+
+router.post(
+  '/reset-password',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { password, confirmPassword, token } = req.body;
+      const success = await controller.resetPassword({
+        body: { password, confirmPassword },
+        token,
+      });
+    } catch (err) {
+      return next(err);
+    }
   },
 );
 

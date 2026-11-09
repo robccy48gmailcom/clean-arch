@@ -14,6 +14,9 @@ export default class AuthController {
     >,
     protected updateProfile: IUseCase<boolean>,
     protected changePassword: IUseCase<boolean>,
+    protected verifyEmail: IUseCase<boolean>,
+    protected sendResetPasswordEmail: IUseCase<boolean>,
+    protected passwordReset: IUseCase<boolean>,
   ) {}
 
   async register(request: IRequest): Promise<{ success: boolean }> {
@@ -67,5 +70,18 @@ export default class AuthController {
   async updatePassword(request: IRequest): Promise<boolean> {
     const user = await this.authorizeUser.call(request.token);
     return this.changePassword.call(user.id, request.body);
+  }
+
+  async verifyEmailAddress(request: IRequest): Promise<boolean> {
+    return this.verifyEmail.call(request.token);
+  }
+
+  async sendPasswordResetEmail(request: IRequest) {
+    const payloadBody = request.body;
+    return this.sendResetPasswordEmail.call(payloadBody);
+  }
+
+  async resetPassword(request: IRequest) {
+    return true;
   }
 }

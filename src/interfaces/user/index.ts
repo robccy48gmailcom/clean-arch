@@ -6,6 +6,7 @@ import { CreateAdminInput } from './createAdminInput';
 import { RegisterInput } from './registerInput';
 import { UpdateUserInput } from './updateUserInput';
 import { ChangePasswordInput } from './changePasswordInput';
+import { ForgotPasswordInput } from './forgotPasswordInput';
 
 export type {
   ILoginResponse,
@@ -14,4 +15,5 @@ export type {
   RegisterInput,
   UpdateUserInput,
   ChangePasswordInput,
+  ForgotPasswordInput,
 };

@@ -5,7 +5,7 @@ import type { SignOptions } from 'jsonwebtoken';
 import { app } from '../../../config';
 import { User } from '../../../entities';
 
-type TokenPayload = Partial<User> & { purpose?: string };
+export type TokenPayload = Partial<User> & { purpose?: string };
 
 export default (
   payload: TokenPayload,

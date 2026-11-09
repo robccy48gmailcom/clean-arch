@@ -9,6 +9,10 @@ import UserProfile from './profile';
 import UpdateUser from './update';
 import RegisterUser from './register';
 import ChangePassword from './changePassword';
+import VerifyEmail from './verifyEmail';
+import SendResetPasswordEmail from './sendResetPasswordEmail';
+import ResetPassword from './resetPassword';
+
 export {
   AuthorizeUser,
   AuthorizeAdmin,
@@ -21,4 +25,7 @@ export {
   UpdateUser,
   RegisterUser,
   ChangePassword,
+  VerifyEmail,
+  SendResetPasswordEmail,
+  ResetPassword,
 };

@@ -19,23 +19,27 @@ export default class LoginUser implements IUseCase<ILoginResponse> {
     ) => string,
   ) {}
 
-  async call(email: string, password: string): Promise<ILoginResponse> {
-    if (!email || !password) {
+  async call(emailPayload: string, password: string): Promise<ILoginResponse> {
+    await new Promise((r) => setTimeout(r, 2000));
+    if (!emailPayload || !password) {
       throw new ValidationError('Email and Password are required');
     }
-    const user = await this.userDAO.findForAuth(email);
+    const user = await this.userDAO.findForAuth(emailPayload);
     const passwordsMatch = user
       ? await this.comparePasswords(password, user.password)
       : false;
 
-    if (user && passwordsMatch) {
-      const { id, firstName, lastName, email, role } = user;
-      return {
-        user: { id, firstName, lastName, email, role },
-        token: this.issueToken({ id, firstName, lastName, email }, '2d'),
-      };
-    } else {
+    if (!user || !passwordsMatch) {
       throw new UnauthorizedError('Invalid login or password');
     }
+    if (!user.emailVerified) {
+      throw new UnauthorizedError('account email not verified');
+    }
+
+    const { id, firstName, lastName, email, role } = user;
+    return {
+      user: { id, firstName, lastName, email, role },
+      token: this.issueToken({ id, firstName, lastName, email }, '2d'),
+    };
   }
 }

@@ -7,7 +7,9 @@ import {
   issueToken,
   passwordsMatch,
   verifyToken,
-} from '../infrastructure/utils/auth';
+  sendVerificationEmail,
+  resetPasswordEmail,
+} from '../infrastructure/utils';
 import * as validators from '../infrastructure/validation/joi';
 import * as zodValidators from '../infrastructure/validation/zod';
 export default {
@@ -26,5 +28,7 @@ export default {
     issueToken,
     verifyToken,
     passwordsMatch,
+    sendVerificationEmail,
+    resetPasswordEmail,
   },
 };
